@@ -1,8 +1,10 @@
 package it.naoslab.ytclonebackend.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,10 +16,17 @@ import java.util.UUID;
 @Service
 public class FileUploadService implements FileService {
 
+    @Value("${MultimediaDirectoryFolder.upload}")
+    String uploadFolder;
+
+    @Value("${MultimediaDirectoryFolder.upload-without-prefix}")
+    String uploadUrl;
+
     @Override
     public String saveFile(MultipartFile multipartFile) throws IOException {
 
-        Path uploadPath = Paths.get("uploadedMedia");
+
+        Path uploadPath = Paths.get(uploadFolder);
 
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
@@ -28,7 +37,8 @@ public class FileUploadService implements FileService {
         try (InputStream inputStream = multipartFile.getInputStream()) {
             Path filePath = uploadPath.resolve(fileCode);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-            urlFile = uploadPath + "/" + fileCode;
+            String address = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+            urlFile = address + "/" + uploadUrl + "/" + fileCode;
         } catch (IOException ioException) {
             throw new IOException("Impossibile salvare il file!", ioException);
         }

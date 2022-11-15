@@ -21,11 +21,9 @@ public class CorsConf implements WebMvcConfigurer {
                 "/Multimedia/**").addResourceLocations("file:///" + pathFisico + "/");
     }
 
-
-
-        @Override
+    @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET", "POST").allowedHeaders("*").maxAge(3600);
+        registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET", "POST", "PUT").allowedHeaders("*").maxAge(3600);
     }
 
 
