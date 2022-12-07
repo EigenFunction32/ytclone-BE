@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class CorsConfig implements WebMvcConfigurer {
+public class ExtraConfig implements WebMvcConfigurer {
 
     @Value("${MultimediaDirectoryFolder.upload}")
     String pathFisico;
