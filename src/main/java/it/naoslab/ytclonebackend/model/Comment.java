@@ -17,7 +17,7 @@ public class Comment {
     @Id
     private String id;
     private String text;
-    private String author;
+    private String authorId;
     private AtomicInteger likeCount = new AtomicInteger(0);
     private AtomicInteger disLikeCount = new AtomicInteger(0);
 

@@ -1,5 +1,4 @@
 package it.naoslab.ytclonebackend.dto;
-// NON COMPLETO!
 
 import lombok.*;
 
@@ -9,12 +8,12 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class CommentDto {
-//    @NotBlank
+    //    @NotBlank
     private String commentText;
-//    @NotBlank
-    private String commentAuthor;
-//    @Min(value = 0)
+    //    @NotBlank
+    private String authorId;
+    //    @Min(value = 0)
     private int likeCount;
-//    @Min(value = 0)
+    //    @Min(value = 0)
     private int disLikeCount;
 }

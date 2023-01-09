@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
 
 @Service
 @RequiredArgsConstructor
@@ -74,8 +76,7 @@ public class UserService implements UserDetailsService {
     public void subscribeUser(String userId) {
         User currentUser = getCurrentUser();
         currentUser.addToSubscribedUsers(userId);
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Impossibile trovare l'utente con id - " + userId));
+        User user = getUserById(userId);
         user.addToSubscribers(currentUser.getId());
         userRepository.save(currentUser);
         userRepository.save(user);
@@ -84,10 +85,19 @@ public class UserService implements UserDetailsService {
     public void unSubscribeUser(String userId) {
         User currentUser = getCurrentUser();
         currentUser.removeFromSubscribedToUser(userId);
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Impossibile trovare l'utente con id - " + userId));
+        User user = getUserById(userId);
         user.removeFromSubscribers(currentUser.getId());
         userRepository.save(currentUser);
         userRepository.save(user);
+    }
+
+    public Set<String> userHistory(String userId) {
+        User user = getUserById(userId);
+        return user.getVideoHistory();
+    }
+
+    private User getUserById(String userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Impossibile trovare l'utente con id - " + userId));
     }
 }

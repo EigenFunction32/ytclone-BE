@@ -10,7 +10,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -74,7 +73,6 @@ public class User {
     public void addToSubscribers(String userId) {
         subscribers.add(userId);
     }
-
 
     public void removeFromSubscribedToUser(String userId) {
         subscribedToUsers.remove(userId);

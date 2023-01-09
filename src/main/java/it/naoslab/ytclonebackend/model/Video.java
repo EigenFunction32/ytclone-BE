@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Data
@@ -30,7 +31,7 @@ public class Video {
     private VideoStatus videoStatus;
     private AtomicInteger viewCount = new AtomicInteger(0);
     private String thumbnailUrl;
-    private List<Comment> comments = new ArrayList<>();
+    private List<Comment> commentList = new CopyOnWriteArrayList<>();
 
     public int likeCount() {
         return likes.get();
@@ -61,6 +62,7 @@ public class Video {
     }
 
     public void addComment(Comment comment) {
-        comments.add(comment);
+        commentList.add(comment);
     }
+
 }
