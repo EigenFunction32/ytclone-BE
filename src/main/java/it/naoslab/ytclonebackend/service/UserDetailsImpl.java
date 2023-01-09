@@ -89,6 +89,7 @@ public class UserDetailsImpl implements UserDetails {
         return true;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o)

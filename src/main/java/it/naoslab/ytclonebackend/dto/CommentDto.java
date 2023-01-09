@@ -1,5 +1,5 @@
 package it.naoslab.ytclonebackend.dto;
-// NON COMPLETO! Da integrare con il sistema di autenticazione!!!
+// NON COMPLETO!
 
 import lombok.*;
 

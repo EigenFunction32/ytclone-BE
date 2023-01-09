@@ -1,17 +1,31 @@
 package it.naoslab.ytclonebackend.controller;
 
+import it.naoslab.ytclonebackend.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
-// NON COMPLETO! Da integrare con il sistema di autenticazione!!!
+// NON COMPLETO!
 
 
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
+    private final UserService userService;
+    @PostMapping("subscribe/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean subscribeUser(@PathVariable String userId) {
+        userService.subscribeUser(userId);
+        return true;
+    }
+
+    @PostMapping("unSubscribe/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean unSubscribeUser(@PathVariable String userId) {
+        userService.unSubscribeUser(userId);
+        return true;
+    }
 //
 //    private final UserService userService;
 //    private final UserValidationService userValidationService;
@@ -31,9 +45,5 @@ public class UserController {
 //        return userInfoDTO;
 //    }
 //
-//    @PostMapping("subscribe/{userId}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void subscribeUser(@PathVariable String userId) {
-//        userService.subscribeUser(userId);
-//    }
+
 }

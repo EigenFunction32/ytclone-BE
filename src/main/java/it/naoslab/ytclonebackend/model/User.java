@@ -21,12 +21,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class User {
 
     private String id;
-
-    //    private String firstName;
-//
-//    private String lastName;
-//
-//    private String fullName;
     @NotBlank
     @Size(max = 20)
     private String username;
@@ -41,9 +35,9 @@ public class User {
     private Set<Role> roles = new HashSet<>();
     private String picture;
     private String sub;
-    private Set<String> subscribedToUsers = new HashSet<>();
-    private Set<String> subscribers = new HashSet<>();
-    private Set<String> videoHistory = new LinkedHashSet<>();
+    private Set<String> subscribedToUsers = ConcurrentHashMap.newKeySet();
+    private Set<String> subscribers = ConcurrentHashMap.newKeySet();
+    private Set<String> videoHistory = ConcurrentHashMap.newKeySet();
     private Set<String> likedVideos = ConcurrentHashMap.newKeySet();
     private Set<String> disLikedVideos = ConcurrentHashMap.newKeySet();
 
@@ -61,7 +55,7 @@ public class User {
         likedVideos.remove(videoId);
     }
 
-    public void addToDisLikedVideo(String videoId) {
+    public void addToDisLikedVideos(String videoId) {
         disLikedVideos.add(videoId);
     }
 
@@ -79,5 +73,14 @@ public class User {
 
     public void addToSubscribers(String userId) {
         subscribers.add(userId);
+    }
+
+
+    public void removeFromSubscribedToUser(String userId) {
+        subscribedToUsers.remove(userId);
+    }
+
+    public void removeFromSubscribers(String userId) {
+        subscribers.remove(userId);
     }
 }

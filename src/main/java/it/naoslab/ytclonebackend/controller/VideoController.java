@@ -1,5 +1,6 @@
 package it.naoslab.ytclonebackend.controller;
 
+import it.naoslab.ytclonebackend.dto.CommentDto;
 import it.naoslab.ytclonebackend.dto.UploadVideoResponse;
 import it.naoslab.ytclonebackend.dto.VideoDto;
 import it.naoslab.ytclonebackend.service.VideoService;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-// NON COMPLETO! Da integrare con il sistema di autenticazione!!!
+// NON COMPLETO!
 
 @RestController
 @RequestMapping("/api/videos/")
@@ -41,6 +42,23 @@ public class VideoController {
     public VideoDto getVideoDetails(@PathVariable String videoId) {
         return videoService.getVideoDetails(videoId);
     }
+
+    @PostMapping("{videoId}/like")
+        @ResponseStatus(HttpStatus.OK)
+        public VideoDto likeVideo(@PathVariable String videoId) {
+            return videoService.likeVideo(videoId);
+        }
+
+    @PostMapping("{videoId}/disLike")
+    @ResponseStatus(HttpStatus.OK)
+    public VideoDto disLikeVideo(@PathVariable String videoId) {
+        return videoService.disLikeVideo(videoId);
+    }
+
+    @PostMapping("{videoId}/comment")
+        public void addComments(@PathVariable String id, @RequestBody CommentDto commentDto) {
+            videoService.addComment(commentDto, id);
+        }
 
 //    @RestController
 //    @RequestMapping("/api/video/")

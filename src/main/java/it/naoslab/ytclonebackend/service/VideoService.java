@@ -1,6 +1,7 @@
 package it.naoslab.ytclonebackend.service;
-// NON COMPLETO! Da integrare con il sistema di autenticazione!!!
+// NON COMPLETO!
 
+import it.naoslab.ytclonebackend.dto.CommentDto;
 import it.naoslab.ytclonebackend.dto.UploadVideoResponse;
 import it.naoslab.ytclonebackend.dto.VideoDto;
 import it.naoslab.ytclonebackend.model.Video;
@@ -29,27 +30,28 @@ public class VideoService {
     }
 
     public VideoDto editVideo(VideoDto videoDto) {
-       var savedVideo = getVideoById(videoDto.getId()) ;
+        var savedVideo = getVideoById(videoDto.getId());
 
-       savedVideo.setTitle(videoDto.getTitle());
-       savedVideo.setDescription(videoDto.getDescription());
-       savedVideo.setTags(videoDto.getTags());
-       savedVideo.setThumbnailUrl(videoDto.getThumbnailUrl());
-       savedVideo.setVideoStatus(videoDto.getVideoStatus());
+        savedVideo.setTitle(videoDto.getTitle());
+        savedVideo.setDescription(videoDto.getDescription());
+        savedVideo.setTags(videoDto.getTags());
+        savedVideo.setThumbnailUrl(videoDto.getThumbnailUrl());
+        savedVideo.setVideoStatus(videoDto.getVideoStatus());
 
-       videoRepository.save(savedVideo);
-       return videoDto;
+        videoRepository.save(savedVideo);
+        return videoDto;
 
     }
 
     public String uploadThumbnail(MultipartFile file, String videoId) throws IOException {
         var savedVideo = getVideoById(videoId);
-       String thumbnailUrl = fileUploadService.saveFile(file);
-       savedVideo.setThumbnailUrl(thumbnailUrl);
-       videoRepository.save(savedVideo);
-       return thumbnailUrl;
+        String thumbnailUrl = fileUploadService.saveFile(file);
+        savedVideo.setThumbnailUrl(thumbnailUrl);
+        videoRepository.save(savedVideo);
+        return thumbnailUrl;
 
     }
+
     Video getVideoById(String videoId) {
         return videoRepository.findById(videoId).orElseThrow(() -> new IllegalArgumentException("Impossibile trovare il video con id " + videoId));
     }
@@ -57,16 +59,70 @@ public class VideoService {
     public VideoDto getVideoDetails(String videoId) {
         Video savedVideo = getVideoById(videoId);
 
-        VideoDto videoDto = new VideoDto();
-        videoDto.setVideoUrl(savedVideo.getVideoUrl());
-        videoDto.setThumbnailUrl(savedVideo.getThumbnailUrl());
-        videoDto.setId(savedVideo.getId());
-        videoDto.setTitle(savedVideo.getTitle());
-        videoDto.setDescription(savedVideo.getDescription());
-        videoDto.setTags(savedVideo.getTags());
-        videoDto.setVideoStatus(savedVideo.getVideoStatus());
+        increaseViewCount(savedVideo);
+        userService.addVideoToHistory(videoId);
 
+        return mapToVideoDto(savedVideo);
+    }
+
+    private void increaseViewCount(Video savedVideo) {
+        savedVideo.increaseViewCount();
+        videoRepository.save(savedVideo);
+    }
+
+    public VideoDto likeVideo(String videoId) {
+        Video videoById = getVideoById(videoId);
+        if (userService.ifLikedVideo(videoId)) {
+            videoById.decreaseLikeCount();
+            userService.removeLikedVideos(videoId);
+        } else if (userService.ifDisLikedVideo(videoId)) {
+            videoById.decreaseDisLikeCount();
+            userService.removeDisLikedVideos(videoId);
+            videoById.increaseLikeCount();
+            userService.addToLikedVideos(videoId);
+        } else {
+            videoById.increaseLikeCount();
+            userService.addToLikedVideos(videoId);
+        }
+        videoRepository.save(videoById);
+        return mapToVideoDto(videoById);
+
+    }
+
+    public VideoDto disLikeVideo(String videoId) {
+        Video videoById = getVideoById(videoId);
+        if (userService.ifDisLikedVideo(videoId)) {
+            videoById.decreaseDisLikeCount();
+            userService.removeDisLikedVideos(videoId);
+        } else if (userService.ifLikedVideo(videoId)) {
+            videoById.decreaseLikeCount();
+            userService.removeLikedVideos(videoId);
+            videoById.increaseDisLikeCount();
+            userService.addToDisLikedVideos(videoId);
+        } else {
+            videoById.increaseDisLikeCount();
+            userService.addToDisLikedVideos(videoId);
+        }
+        videoRepository.save(videoById);
+        return mapToVideoDto(videoById);
+    }
+
+    private static VideoDto mapToVideoDto(Video videoById) {
+        VideoDto videoDto = new VideoDto();
+        videoDto.setVideoUrl(videoById.getVideoUrl());
+        videoDto.setThumbnailUrl(videoById.getThumbnailUrl());
+        videoDto.setId(videoById.getId());
+        videoDto.setTitle(videoById.getTitle());
+        videoDto.setDescription(videoById.getDescription());
+        videoDto.setTags(videoById.getTags());
+        videoDto.setVideoStatus(videoById.getVideoStatus());
+        videoDto.setLikeCount(videoById.getLikes().get());
+        videoDto.setDisLikeCount(videoById.getDisLikes().get());
+        videoDto.setViewCount(videoById.getViewCount().get());
         return videoDto;
+    }
+
+    public void addComment(CommentDto commentDto, String id) {
     }
 //
 //    public UploadVideoResponse uploadVideo(MultipartFile file, String userId) {
@@ -74,6 +130,7 @@ public class VideoService {
 //        var video = new Video();
 //        video.setUrl(url);
 //        Objects.requireNonNull(userId);
+//        video.setUserId(userId);
 //        video.setUserId(userId);
 //        videoRepository.save(video);
 //        return new UploadVideoResponse(video.getId(), url);
