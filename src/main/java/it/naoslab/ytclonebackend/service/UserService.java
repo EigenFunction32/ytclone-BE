@@ -4,6 +4,7 @@ package it.naoslab.ytclonebackend.service;
 import it.naoslab.ytclonebackend.model.User;
 import it.naoslab.ytclonebackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,6 +34,11 @@ public class UserService implements UserDetailsService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         return userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("Impossibile trovare l'utente con username - " + username));
+    }
+
+    public boolean checkUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return !(auth instanceof AnonymousAuthenticationToken);
     }
 
     public void addToLikedVideos(String videoId) {

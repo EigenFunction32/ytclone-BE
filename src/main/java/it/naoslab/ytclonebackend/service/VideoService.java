@@ -36,7 +36,6 @@ public class VideoService {
         savedVideo.setTitle(videoDto.getTitle());
         savedVideo.setDescription(videoDto.getDescription());
         savedVideo.setTags(videoDto.getTags());
-        savedVideo.setThumbnailUrl(videoDto.getThumbnailUrl());
         savedVideo.setVideoStatus(videoDto.getVideoStatus());
 
         videoRepository.save(savedVideo);
@@ -59,10 +58,9 @@ public class VideoService {
 
     public VideoDto getVideoDetails(String videoId) {
         Video savedVideo = getVideoById(videoId);
-
         increaseViewCount(savedVideo);
-        userService.addVideoToHistory(videoId);
-
+        if (userService.checkUser())
+            userService.addVideoToHistory(videoId);
         return mapToVideoDto(savedVideo);
     }
 
