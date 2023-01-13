@@ -124,7 +124,7 @@ public class VideoService {
     public void addComment(CommentDto commentDto, String videoId) {
         Video video = getVideoById(videoId);
         Comment comment = new Comment();
-        comment.setText(commentDto.getCommentText());
+        comment.setCommentText(commentDto.getCommentText());
         comment.setAuthorId(comment.getAuthorId());
         video.addComment(comment);
 
@@ -140,7 +140,7 @@ public class VideoService {
 
     private CommentDto mapToCommentDto(Comment comment) {
         CommentDto commentDto = new CommentDto();
-        commentDto.setCommentText(comment.getText());
+        commentDto.setCommentText(comment.getCommentText());
         commentDto.setAuthorId(comment.getAuthorId());
         return commentDto;
     }

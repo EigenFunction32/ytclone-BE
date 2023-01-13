@@ -146,4 +146,11 @@ public class AuthController {
         refreshTokenService.deleteByUserId(user);
         return ResponseEntity.ok(new MessageResponse("Log out successful!"));
     }
+
+    @GetMapping("/getUserInfo")
+    public String getUserInfo() {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String userId = userDetails.getId();
+        return userId;
+    }
 }
