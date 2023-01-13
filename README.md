@@ -12,7 +12,7 @@ Questo progetto è stato sviluppato utilizzando:
 
 # Configurazione pre-run BE
 
-1. Pre-config MongoDB
+1. Config MongoDB
 
 Il DB deve prevedere una collezione denominata "roles" all'interno della quale troviamo i ruoli previsti per i vari utenti:
 
@@ -29,7 +29,7 @@ ed un'altra denominata "Users" all'interno della quale troviamo almeno un utente
 
 ###################################################################################################
 
-2. Pre-config BE
+2. Config BE
 
 Il file "src/main/resources/application.properties" contiene le variabili da modificare 
 per la corretta esecuzione del BE sul server host.
