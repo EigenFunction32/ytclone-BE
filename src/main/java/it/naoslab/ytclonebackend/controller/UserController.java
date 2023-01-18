@@ -1,11 +1,13 @@
 package it.naoslab.ytclonebackend.controller;
 
+import it.naoslab.ytclonebackend.dto.VideoDto;
 import it.naoslab.ytclonebackend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
@@ -28,7 +30,13 @@ public class UserController {
 
     @GetMapping("{userId}/history")
     @ResponseStatus(HttpStatus.OK)
-    public Set<String> userHistory(@PathVariable String userId) {
+    public List<Optional<VideoDto>> userHistory(@PathVariable String userId) {
         return userService.userHistory(userId);
+    }
+
+    @GetMapping("{userId}/likedVideos")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Optional<VideoDto>> likedVideos(@PathVariable String userId) {
+        return userService.likedVideos(userId);
     }
 }

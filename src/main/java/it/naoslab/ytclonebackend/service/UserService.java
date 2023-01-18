@@ -1,8 +1,10 @@
 package it.naoslab.ytclonebackend.service;
 
 
+import it.naoslab.ytclonebackend.dto.VideoDto;
 import it.naoslab.ytclonebackend.model.User;
 import it.naoslab.ytclonebackend.repository.UserRepository;
+import it.naoslab.ytclonebackend.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,6 +15,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -21,6 +26,7 @@ import java.util.Set;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final VideoRepository videoRepository;
 
     @Override
     @Transactional
@@ -34,6 +40,11 @@ public class UserService implements UserDetailsService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
         return userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("Impossibile trovare l'utente con username - " + username));
+    }
+
+    private User getUserById(String userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Impossibile trovare l'utente con id - " + userId));
     }
 
     public boolean checkUser() {
@@ -97,13 +108,25 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public Set<String> userHistory(String userId) {
+    public List<Optional<VideoDto>> userHistory(String userId) {
         User user = getUserById(userId);
-        return user.getVideoHistory();
+        Set<String> userHistory = user.getVideoHistory();
+        List<Optional<VideoDto>> userVideoHistory = new ArrayList<>();
+        for (String videoId : userHistory) {
+            Optional<VideoDto> video = videoRepository.findById(videoId).map(VideoService::mapToVideoDto);
+            userVideoHistory.add(video);
+        }
+        return userVideoHistory;
     }
 
-    private User getUserById(String userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Impossibile trovare l'utente con id - " + userId));
+    public List<Optional<VideoDto>> likedVideos(String userId) {
+        User user = getUserById(userId);
+        Set<String> likedVideos = user.getLikedVideos();
+        List<Optional<VideoDto>> userLikedVideos = new ArrayList<>();
+        for (String videoId : likedVideos) {
+            Optional<VideoDto> video = videoRepository.findById(videoId).map(VideoService::mapToVideoDto);
+            userLikedVideos.add(video);
+        }
+        return userLikedVideos;
     }
 }

@@ -23,7 +23,8 @@ public class Video {
     private String id;
     private String title;
     private String description;
-    private String userId;
+    private String uploadedBy;
+    private String uploadDate;
     private AtomicInteger likes = new AtomicInteger(0);
     private AtomicInteger disLikes = new AtomicInteger(0);
     private List<String> tags;
