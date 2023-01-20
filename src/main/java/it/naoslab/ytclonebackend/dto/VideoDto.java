@@ -15,6 +15,7 @@ public class VideoDto {
     private String title;
     private String description;
     private String uploadedBy;
+    private String uploadedById;
     private String uploadDate;
     private List<String> tags;
     private String videoUrl;

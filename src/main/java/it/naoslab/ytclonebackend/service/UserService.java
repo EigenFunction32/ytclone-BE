@@ -42,6 +42,12 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("Impossibile trovare l'utente con username - " + username));
     }
 
+    public String getCurrentUserId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        return userRepository.findByUsername(username).get().getId();
+    }
+
     private User getUserById(String userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Impossibile trovare l'utente con id - " + userId));

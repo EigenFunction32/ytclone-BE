@@ -8,6 +8,7 @@ import it.naoslab.ytclonebackend.model.Video;
 import it.naoslab.ytclonebackend.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,9 +26,11 @@ public class VideoService {
 
     public UploadVideoResponse uploadVideo(MultipartFile multipartFile) throws IOException {
         String videoUrl = fileUploadService.saveFile(multipartFile);
+        String userId = userService.getCurrentUserId();
         String user = SecurityContextHolder.getContext().getAuthentication().getName();
         var video = new Video();
         video.setVideoUrl(videoUrl);
+        video.setUploadedById(userId);
         video.setUploadedBy(user);
         var savedVideo = videoRepository.save(video);
         return new UploadVideoResponse(savedVideo.getId(), savedVideo.getVideoUrl());
@@ -114,6 +117,7 @@ public class VideoService {
         videoDto.setVideoUrl(videoById.getVideoUrl());
         videoDto.setThumbnailUrl(videoById.getThumbnailUrl());
         videoDto.setUploadedBy(videoById.getUploadedBy());
+        videoDto.setUploadedById(videoById.getUploadedById());
         videoDto.setId(videoById.getId());
         videoDto.setTitle(videoById.getTitle());
         videoDto.setDescription(videoById.getDescription());
