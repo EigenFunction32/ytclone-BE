@@ -1,23 +1,26 @@
 package it.naoslab.ytclonebackend.dto;
 
-// NON COMPLETO! Da integrare con il sistema di autenticazione!!!
+import it.naoslab.ytclonebackend.model.Role;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.Set;
 
-    // NON COMPLETO! Inserire modello JSON file risposta server autenticazione
-//    @Data
-//    @AllArgsConstructor
-//    @NoArgsConstructor
-//    public class UserInfoDTO {
-//        private String id;
-//        @JsonProperty("sub")
-//        private String sub;
-//        @JsonProperty("given_name")
-//        private String givenName;
-//        @JsonProperty("family_name")
-//        private String familyName;
-//        @JsonProperty("name")
-//        private String name;
-//        @JsonProperty("picture")
-//        private String picture;
-//        private String email;
-//    }
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserInfoDTO {
+    private String id;
+    private String username;
+    private String email;
+    private String password;
+    private Set<Role> roles;
+    private String picture;
+    private Set<String> subscribedToUsers;
+    private Set<String> subscribers;
+    private Set<String> videoHistory;
+    private Set<String> likedVideos;
+    private Set<String> disLikedVideos;
+
+}

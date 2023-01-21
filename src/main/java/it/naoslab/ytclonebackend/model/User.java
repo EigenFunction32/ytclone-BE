@@ -33,7 +33,6 @@ public class User {
     @DBRef
     private Set<Role> roles = new HashSet<>();
     private String picture;
-    private String sub;
     private Set<String> subscribedToUsers = ConcurrentHashMap.newKeySet();
     private Set<String> subscribers = ConcurrentHashMap.newKeySet();
     private Set<String> videoHistory = ConcurrentHashMap.newKeySet();
