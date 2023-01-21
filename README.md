@@ -1,3 +1,5 @@
+![immagine](https://user-images.githubusercontent.com/94211283/213875031-c1fd0b0e-ad22-4e32-a631-e7410da76028.png)
+
 # YTclone Backend
 
 Questo progetto è stato sviluppato utilizzando:
