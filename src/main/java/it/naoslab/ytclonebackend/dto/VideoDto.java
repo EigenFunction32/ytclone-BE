@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -16,7 +17,9 @@ public class VideoDto {
     private String description;
     private String uploadedBy;
     private String uploadedById;
-    private String uploadDate;
+    private LocalDate uploadDate;
+    private Long sizeInBytes;
+    private String content;
     private List<String> tags;
     private String videoUrl;
     private VideoStatus videoStatus;

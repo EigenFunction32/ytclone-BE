@@ -72,4 +72,10 @@ public class VideoController {
     public List<VideoDto> getAllVideos() {
         return videoService.getAllVideos();
     }
+
+    @GetMapping("/search={searchPhrase}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<VideoDto> search(@PathVariable String searchPhrase) {
+        return videoService.fullTextSearch(searchPhrase);
+    }
 }

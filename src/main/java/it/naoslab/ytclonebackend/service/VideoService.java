@@ -7,11 +7,17 @@ import it.naoslab.ytclonebackend.model.Comment;
 import it.naoslab.ytclonebackend.model.Video;
 import it.naoslab.ytclonebackend.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
+import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -27,10 +33,16 @@ public class VideoService {
         String videoUrl = fileUploadService.saveFile(multipartFile);
         String userId = userService.getCurrentUserId();
         String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        LocalDate uploadDate = (java.time.LocalDate.now());
+        Long size = multipartFile.getSize();
+        String content = multipartFile.getContentType();
         var video = new Video();
         video.setVideoUrl(videoUrl);
         video.setUploadedById(userId);
         video.setUploadedBy(user);
+        video.setUploadDate(uploadDate);
+        video.setSizeInBytes(size);
+        video.setContent(content);
         var savedVideo = videoRepository.save(video);
         return new UploadVideoResponse(savedVideo.getId(), savedVideo.getVideoUrl());
     }
@@ -117,6 +129,7 @@ public class VideoService {
         videoDto.setThumbnailUrl(videoById.getThumbnailUrl());
         videoDto.setUploadedBy(videoById.getUploadedBy());
         videoDto.setUploadedById(videoById.getUploadedById());
+        videoDto.setUploadDate(videoById.getUploadDate());
         videoDto.setId(videoById.getId());
         videoDto.setTitle(videoById.getTitle());
         videoDto.setDescription(videoById.getDescription());
@@ -154,6 +167,12 @@ public class VideoService {
 
     public List<VideoDto> getAllVideos() {
         return videoRepository.findAll().stream().map(VideoService::mapToVideoDto).toList();
+    }
+
+    public List<VideoDto> fullTextSearch(String searchPhrase) {
+        Sort sort = Sort.by("score");
+        TextCriteria criteria = TextCriteria.forLanguage("italian").matchingAny(searchPhrase);
+        return videoRepository.findAllBy(criteria, sort).stream().map(VideoService::mapToVideoDto).toList();
     }
 }
 
