@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
+// Controller per la gestione signup, login, logout, user info e token
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
@@ -53,6 +55,7 @@ public class AuthController {
     @Autowired
     RefreshTokenService refreshTokenService;
 
+//    Login
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -73,7 +76,7 @@ public class AuthController {
         return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(),
                 userDetails.getUsername(), userDetails.getEmail(), roles));
     }
-
+//      Signup
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -84,7 +87,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        // Create new user's account
+        // Creazione nuovo account
         User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
 
@@ -124,6 +127,7 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 
+//    Generazione Token
     @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshRequest request) {
         String requestRefreshToken = request.getRefreshToken();
@@ -139,6 +143,7 @@ public class AuthController {
                         "Refresh token is not in database!"));
     }
 
+//    LogOut con delete tokens generati per l'utente
     @PostMapping("/signout")
     public ResponseEntity<?> logoutUser() {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -147,6 +152,7 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("Log out successful!"));
     }
 
+//    UserInfo necessaria per alcune chiamate del FE
     @GetMapping("/getUserInfo")
     public String getUserInfo() {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

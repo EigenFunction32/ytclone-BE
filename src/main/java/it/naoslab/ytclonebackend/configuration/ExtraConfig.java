@@ -9,6 +9,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class ExtraConfig implements WebMvcConfigurer {
 
+//    Configurazione per l'utilizzo dello storage dei multimedia in locale
+
     @Value("${MultimediaDirectoryFolder.upload}")
     String pathFisico;
 
@@ -21,6 +23,7 @@ public class ExtraConfig implements WebMvcConfigurer {
                 "/Multimedia/**").addResourceLocations("file:///" + pathFisico + "/");
     }
 
+//    Abilitazione CORS per la comunicazione tra BE e FE
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS").allowedHeaders("*").maxAge(3600);

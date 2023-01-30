@@ -2,6 +2,7 @@ package it.naoslab.ytclonebackend.advice;
 
 import java.util.Date;
 
+//  Creazione messaggi d'errore
 public class ErrorMessage {
     private int statusCode;
     private Date timestamp;

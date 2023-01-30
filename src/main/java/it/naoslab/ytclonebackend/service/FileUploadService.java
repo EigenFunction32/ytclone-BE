@@ -16,6 +16,7 @@ import java.util.UUID;
 @Service
 public class FileUploadService implements FileService {
 
+//    File Upload service (Multipart)
     @Value("${MultimediaDirectoryFolder.upload}")
     String uploadFolder;
 

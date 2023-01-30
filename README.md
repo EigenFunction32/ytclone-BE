@@ -44,6 +44,9 @@ spring.data.mongodb.port=27017(default di MongoDB)
 
 spring.data.mongodb.database= -> Nome del DB
 
+spring.data.mongodb.auto-index-creation=true -> Necessario per la creazione del Text-Index e per la funzionalità di ricerca (da migliorare!) 
+
+
 ############## JWT #################
 
 jwt.secret= -> Password per l'utilizzo del Token 
